@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dauphin-sfn"
+version = "0.1.0"
+description = "An educational PyTorch implementation of saddle-free Newton optimization"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "torch==2.15.0",
+    "torchvision==0.29.2",
+    "matplotlib>=3.9,<4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipykernel>=6.29,<8",
+    "jupyterlab>=4.3,<5",
+    "pytest>=8.3,<10",
+    "ruff>=0.8,<1",
+]
+
+[project.scripts]
+dauphin-sfn = "src.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "utils*", "descent_algorithms*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

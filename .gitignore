@@ -1,1 +1,22 @@
-.venv
+# Python environments and generated files
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Downloaded datasets and experiment artifacts
+data/
+results/
+
+# Jupyter and local machine files
+.ipynb_checkpoints/
+.DS_Store
+.env
+.env.*
+!.env.example
