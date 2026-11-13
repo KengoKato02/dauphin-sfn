@@ -22,8 +22,10 @@ def _limit(dataset: Dataset, limit: int | None, seed: int) -> Dataset:
     if limit is None:
         return dataset
     if limit < 1:
-        raise ValueError("Subset limits must be positive, or None for the full split.")
-    indices = torch.randperm(len(dataset), generator=torch.Generator().manual_seed(seed))
+        raise ValueError(
+            "Subset limits must be positive, or None for the full split.")
+    indices = torch.randperm(
+        len(dataset), generator=torch.Generator().manual_seed(seed))
     return Subset(dataset, indices[:limit].tolist())
 
 
@@ -50,22 +52,28 @@ def load_data(
     if name not in {"mnist", "cifar10"}:
         raise ValueError("name must be 'mnist' or 'cifar10'.")
     if batch_size < 1 or num_workers < 0:
-        raise ValueError("batch_size must be positive and num_workers nonnegative.")
+        raise ValueError(
+            "batch_size must be positive and num_workers nonnegative.")
     if not 0 < validation_fraction < 1:
-        raise ValueError("validation_fraction must lie strictly between 0 and 1.")
+        raise ValueError(
+            "validation_fraction must lie strictly between 0 and 1.")
     if image_size is not None and image_size < 1:
-        raise ValueError("image_size must be positive, or None for native resolution.")
+        raise ValueError(
+            "image_size must be positive, or None for native resolution.")
     for limit in (train_limit, eval_limit):
         if limit is not None and limit < 1:
-            raise ValueError("Subset limits must be positive, or None for the full split.")
+            raise ValueError(
+                "Subset limits must be positive, or None for the full split.")
 
     channels, native_size = (1, 28) if name == "mnist" else (3, 32)
     operations = []
     if image_size is not None:
-        operations.append(transforms.Resize((image_size, image_size), antialias=True))
+        operations.append(transforms.Resize(
+            (image_size, image_size), antialias=True))
     # A fixed mapping to [-1, 1] avoids estimating statistics from validation/test data.
     operations.extend(
-        [transforms.ToTensor(), transforms.Normalize((0.5,) * channels, (0.5,) * channels)]
+        [transforms.ToTensor(), transforms.Normalize(
+            (0.5,) * channels, (0.5,) * channels)]
     )
     transform = transforms.Compose(operations)
     dataset_class = datasets.MNIST if name == "mnist" else datasets.CIFAR10
@@ -78,7 +86,8 @@ def load_data(
 
     validation_size = int(len(training_data) * validation_fraction)
     if not 0 < validation_size < len(training_data):
-        raise ValueError("The validation split must leave at least one example in each split.")
+        raise ValueError(
+            "The validation split must leave at least one example in each split.")
     train_data, validation_data = random_split(
         training_data,
         [len(training_data) - validation_size, validation_size],

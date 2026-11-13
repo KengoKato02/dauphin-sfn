@@ -1,7 +1,6 @@
 """Small, smooth classifiers so that exact Hessians remain practical."""
 
 from math import prod
-
 from torch import nn
 
 
