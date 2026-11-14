@@ -5,10 +5,14 @@
 # Description: Pipeline for importing, preparing and exporting MNIST
 # ==============================================================================
 
-from torchvision.transforms import ToTensor, Resize, InterpolationMode
 from utils.logger import divider_logger, generic_logger
 from viz.mnist import plot_mnist_resize_comparison
 from torchvision.datasets import MNIST
+from torchvision.transforms import (
+    ToTensor,
+    Resize,
+    InterpolationMode,
+    Compose)
 
 # ========================== Train & Test ========================== #
 
@@ -34,14 +38,17 @@ test_data = MNIST(
 
 image, label = train_data[0]
 
-print("Training examples:", len(train_data))
-print("Test examples:", len(test_data))
+divider_logger()
+print("TRAIN & TEST")
+generic_logger({
+    "training_examples": len(train_data),
+    "test_examples": len(test_data),
+    "image_type": type(image),
+    "image_size": image.size,
+    "label": label,
+    "label_type": type(label)
+})
 
-print("Image type:", type(image))
-print("Image size:", image.size)
-
-print("Label:", label)
-print("Label type:", type(label))
 
 # ========================== Tensor Conversion ========================== #
 
@@ -51,6 +58,7 @@ to_tensor = ToTensor()
 image_tensor = to_tensor(image)
 
 divider_logger()
+print("TENSOR CONVERSION")
 generic_logger({
     "tensor_type": type(image_tensor),
     "shape": image_tensor.shape,
@@ -60,13 +68,14 @@ generic_logger({
     "requires_grad": image_tensor.requires_grad
 })
 
+
 # ========================== Resizing ========================== #
 """TODO: Fill Comments for meaning
 """
 
 resize = Resize(
     size=(10, 10),
-    interpolation=InterpolationMode.BILINEAR,
+    interpolation=InterpolationMode.BILINEAR,  # TODO: Explain
     antialias=True,
 )
 
@@ -75,6 +84,7 @@ resized_tensor = to_tensor(resized_image)
 
 # Log
 divider_logger()
+print("RESIZING")
 generic_logger({
     "resized_shape": resized_tensor.shape,
     "pixel_count": resized_tensor.numel(),
@@ -84,3 +94,40 @@ generic_logger({
 
 # Plot
 plot_mnist_resize_comparison(image_tensor, resized_tensor)
+
+
+# ========================== Preparation Set ========================== #
+"""TODO: Fill Comments for meaning
+"""
+
+image_transform = Compose([
+    resize,
+    to_tensor,
+])
+
+prepared_train_data = MNIST(
+    root="data",
+    train=True,
+    download=False,
+    transform=image_transform,
+)
+
+prepared_test_data = MNIST(
+    root="data",
+    train=False,
+    download=False,
+    transform=image_transform,
+)
+
+prepared_image, label = prepared_train_data[0]
+
+# Log
+divider_logger()
+print("PREPARATION SET")
+generic_logger({
+    "shape": prepared_image.shape,
+    "dtype": prepared_image.dtype,
+    "min": prepared_image.min().item(),
+    "max": prepared_image.max().item(),
+    "label": label
+})
