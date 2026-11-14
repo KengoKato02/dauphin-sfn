@@ -5,7 +5,8 @@
 # Description: Logger functions to stringify Messages
 # ==============================================================================
 
-from decorators import handle_exceptions
+from utils.decorators import handle_exceptions
+from collections.abc import Mapping
 
 
 @handle_exceptions
@@ -15,7 +16,12 @@ def generic_logger_singleton(msg: str, val):
 
 
 @handle_exceptions
-def generic_logger_tuple(vals: Tuple):
-    """Loop over tuple and smart construct log messages"""
-    for val in vals:
-        print(f"")
+def generic_logger(values: Mapping[str, object]) -> None:
+    """Print each label and its corresponding value."""
+    for label, value in values.items():
+        print(f"{label}: {value}")
+
+
+@handle_exceptions
+def divider_logger():
+    print("==================================================")
