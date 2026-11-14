@@ -8,8 +8,8 @@
 import torch
 
 from utils.logger import divider_logger, generic_logger
+from torch.utils.data import DataLoader, random_split
 from viz.mnist import plot_mnist_resize_comparison
-from torch.utils.data import random_split
 from torchvision.datasets import MNIST
 from torchvision.transforms import (
     InterpolationMode,
@@ -157,4 +157,60 @@ generic_logger({
     "training": len(train_subset),
     "validation": len(validation_subset),
     "test": len(prepared_test_data)
+})
+
+
+# ========================== BATCHING ========================== #
+"""TODO: Fill Comments for meaning
+
+Reference:
+    - batch_size=32: collect up to 32 examples per batch.
+    - shuffle=True: change the training order each pass. Images stay 
+      paired with their labels.
+    - drop_last=False: keep the final batch, even if it is smaller.
+    - num_workers=0: load examples in the current Python process.
+    - generator=...: make the training shuffle sequence repeatable in 
+      this setup.
+"""
+
+batch_size = 32             # TODO: Comeback
+
+train_loader = DataLoader(
+    train_subset,
+    batch_size=batch_size,
+    shuffle=True,
+    drop_last=False,
+    num_workers=0,
+    generator=torch.Generator().manual_seed(42),
+)
+
+validation_loader = DataLoader(
+    validation_subset,
+    batch_size=batch_size,
+    shuffle=False,
+    drop_last=False,
+    num_workers=0,
+)
+
+test_loader = DataLoader(
+    prepared_test_data,
+    batch_size=batch_size,
+    shuffle=False,
+    drop_last=False,
+    num_workers=0,
+)
+
+# Apply
+batch_iterator = iter(train_loader)
+images, labels = next(batch_iterator)
+
+# Log
+divider_logger()
+print("BATCHING")
+generic_logger({
+    "image_shape": images.shape,
+    "image_dtype": images.dtype,
+    "label_shape": labels.shape,
+    "label_dtype": labels.dtype,
+    "labels": labels,
 })
