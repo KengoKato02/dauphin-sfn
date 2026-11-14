@@ -5,14 +5,18 @@
 # Description: Pipeline for importing, preparing and exporting MNIST
 # ==============================================================================
 
+import torch
+
 from utils.logger import divider_logger, generic_logger
 from viz.mnist import plot_mnist_resize_comparison
+from torch.utils.data import random_split
 from torchvision.datasets import MNIST
 from torchvision.transforms import (
-    ToTensor,
-    Resize,
     InterpolationMode,
-    Compose)
+    ToTensor,
+    Compose,
+    Resize
+)
 
 # ========================== Train & Test ========================== #
 
@@ -130,4 +134,27 @@ generic_logger({
     "min": prepared_image.min().item(),
     "max": prepared_image.max().item(),
     "label": label
+})
+
+
+# ========================== SPLIT ========================== #
+"""TODO: Fill Comments for meaning
+"""
+
+# Make the random selection repeatable.
+split_generator = torch.Generator().manual_seed(42)
+
+train_subset, validation_subset = random_split(
+    prepared_train_data,
+    lengths=[54000, 6000],
+    generator=split_generator,
+)
+
+# Log
+divider_logger()
+print("SPLIT")
+generic_logger({
+    "training": len(train_subset),
+    "validation": len(validation_subset),
+    "test": len(prepared_test_data)
 })
