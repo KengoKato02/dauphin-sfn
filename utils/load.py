@@ -1,3 +1,8 @@
+# ==============================================================================
+# DEPRECATED
+# ==============================================================================
+
+
 """MNIST and CIFAR-10 loaders with reproducible, disjoint validation splits."""
 
 from dataclasses import dataclass

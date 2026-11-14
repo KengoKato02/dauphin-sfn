@@ -48,6 +48,3 @@ def gradient_descent_singleton(
 
 
 # ============================ PyTorch Examples ============================ #
-
-# @handle_exceptions
-# def back_prop_gd(loss):

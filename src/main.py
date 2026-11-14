@@ -38,15 +38,16 @@ loss = (pred - y) ** 2      # Loss function
 # PyTorch Backwards Propagation
 loss.backward()
 
-with torch.no_grad:
-    w = w - learning_rate * w.grad
-    b = b - learning_rate * b.grad
-    theta_new = torch.tensor([w, b], requires_grad=True)
+with torch.no_grad():
+    theta_new = theta_init - learning_rate * theta_init.grad
 
-print("w: ", w)
-print("b: ", b)
+theta_new.requires_grad_(True)
+
 print("=========================")
-print("w grad: ", w.grad)
-print("b grad: ", b.grad)
-print("=========================")
-print("theta new: ", theta_new)
+print("new w:", theta_new[0].item())  # Approximately 2.2
+print("new b:", theta_new[1].item())  # Approximately 0.6
+print("theta new:", theta_new)
+
+# Ensure to clear gradients
+w.grad = None
+b.grad = None 
