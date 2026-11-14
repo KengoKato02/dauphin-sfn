@@ -1,11 +1,19 @@
-"""Small, smooth classifiers so that exact Hessians remain practical."""
+# ==============================================================================
+# Title:       Neural Network Models Imports
+# File:        models.py
+# Author:      Kengo Reimers Kato
+# Description: Dedicated file for model imports relevant to Dauphin et al.
+# ==============================================================================
 
 from math import prod
 from torch import nn
 
 
 def build_mlp(input_shape: tuple[int, int, int], hidden_units: int = 5) -> nn.Sequential:
-    """Return logits for ten classes, using tanh for smooth second derivatives."""
+    """Build for Multi-layer Perceptron
+
+        Return logits for ten classes, using tanh for smooth second derivatives.
+    """
     if hidden_units < 1:
         raise ValueError("hidden_units must be positive.")
     return nn.Sequential(

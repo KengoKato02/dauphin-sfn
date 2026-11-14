@@ -2,8 +2,9 @@
 
 from collections.abc import Iterable
 
-from torch import Tensor
+# PyTorch Imports
 from torch.optim import SGD as TorchSGD
+from torch import Tensor
 
 
 class MiniBatchSGD(TorchSGD):
@@ -11,6 +12,7 @@ class MiniBatchSGD(TorchSGD):
 
     def __init__(self, params: Iterable[Tensor], lr: float = 0.01, batch_size: int = 64) -> None:
         if batch_size < 2:
-            raise ValueError("MiniBatchSGD requires batch_size >= 2; use SGD for batch size one.")
+            raise ValueError(
+                "MiniBatchSGD requires batch_size >= 2; use SGD for batch size one.")
         self.batch_size = batch_size
         super().__init__(params, lr=lr)
