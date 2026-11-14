@@ -18,20 +18,22 @@ import torch
 x = torch.tensor(2.0)
 y = torch.tensor(5.0)
 
-# requires_grad=True means to track iterative computations for gradient
-w = torch.tensor(1.0, requires_grad=True)
-b = torch.tensor(0.0, requires_grad=True)
-
-theta_curr = torch.tensor([w, b])
 learning_rate = torch.tensor(0.1)
 
+# Initial Training Parameters
+theta_init = torch.tensor([1.0, 0.0],
+                          requires_grad=True)
+w = theta_init[0]
+b = theta_init[1]
+
 # Forward Pass Example
-pred = w*x + b
-loss = (pred - y) ** 2
+pred = w*x + b              # Prediction
+loss = (pred - y) ** 2      # Loss function
 
 # Use for single computation (Hand confirmation)
-batch_gd = gradient_descent(theta_curr, loss, learning_rate)
+batch_gd = gradient_descent(theta_init, loss, learning_rate)
 print(batch_gd.shape)
+print(batch_gd)
 
 # # Backwards Propogation
 # loss.backward
