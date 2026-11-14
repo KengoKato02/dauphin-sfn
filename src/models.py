@@ -1,7 +1,7 @@
 # ==============================================================================
 # Title:       Neural Network Models Imports
 # File:        models.py
-# Author:      Kengo Reimers Kato
+# Author:      KATO Kengo
 # Description: Dedicated file for model imports relevant to Dauphin et al.
 # ==============================================================================
 

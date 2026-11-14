@@ -1,11 +1,11 @@
 # ==============================================================================
 # Title:       Main Entry Point
 # File:        main.py
-# Author:      Kengo Reimers Kato
+# Author:      KATO Kengo
 # Description: Main file for orchestration of functions
 # ==============================================================================
 
-from descent_algorithms.batch_gd import gradient_descent
+from descent_algorithms.batch_gd import gradient_descent_singleton
 
 import torch
 
@@ -30,10 +30,23 @@ b = theta_init[1]
 pred = w*x + b              # Prediction
 loss = (pred - y) ** 2      # Loss function
 
-# Use for single computation (Hand confirmation)
-batch_gd = gradient_descent(theta_init, loss, learning_rate)
-print(batch_gd.shape)
-print(batch_gd)
+# # Use for single computation (Hand confirmation)
+# batch_gd = gradient_descent_singleton(theta_init, loss, learning_rate)
+# print(batch_gd.shape)
+# print(batch_gd)
 
-# # Backwards Propogation
-# loss.backward
+# PyTorch Backwards Propagation
+loss.backward()
+
+with torch.no_grad:
+    w = w - learning_rate * w.grad
+    b = b - learning_rate * b.grad
+    theta_new = torch.tensor([w, b], requires_grad=True)
+
+print("w: ", w)
+print("b: ", b)
+print("=========================")
+print("w grad: ", w.grad)
+print("b grad: ", b.grad)
+print("=========================")
+print("theta new: ", theta_new)

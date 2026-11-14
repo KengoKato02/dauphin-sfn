@@ -1,7 +1,7 @@
 # ==============================================================================
 # Title:       Tensor Usage Reference Document
 # File:        tensors.py
-# Author:      Kengo Reimers Kato
+# Author:      KATO Kengo
 # Description: File used for basic reference on Tensor usage from PyTorch
 # ==============================================================================
 

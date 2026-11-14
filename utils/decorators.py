@@ -1,7 +1,7 @@
 # ==============================================================================
 # Title:       Decorators Utilities
 # File:        decorators.py
-# Author:      Kengo Reimers Kato
+# Author:      KATO Kengo
 # Description: Simple Decorators setup for any decorator functions
 # ==============================================================================
 

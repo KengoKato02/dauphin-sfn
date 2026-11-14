@@ -1,13 +1,15 @@
 # ==============================================================================
 # Title:       Batch Gradient Descent Algorithm
 # File:        batch_gd.py
-# Author:      Kengo Reimers Kato
+# Author:      KATO Kengo
 # Description: Implementation of Classical Batch Gradient Descent
 # ==============================================================================
 
 from utils.decorators import handle_exceptions
 
 import torch
+
+# ============================ Hand-Written Examples ============================ #
 
 
 @handle_exceptions
@@ -21,7 +23,7 @@ def _compute_gradient(
 
 
 @handle_exceptions
-def gradient_descent(
+def gradient_descent_singleton(
     theta_curr: torch.Tensor,
     loss: torch.Tensor,
     learning_rate: float
@@ -43,3 +45,9 @@ def gradient_descent(
     derived_loss = _compute_gradient(loss, theta_curr)
     theta_next = theta_curr - learning_rate * derived_loss
     return theta_next
+
+
+# ============================ PyTorch Examples ============================ #
+
+# @handle_exceptions
+# def back_prop_gd(loss):
