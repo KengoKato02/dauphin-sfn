@@ -5,15 +5,9 @@
 # Description: Functions for converting, resizing and preparing dataset images
 # ==============================================================================
 
-from torchvision.transforms import (
-    Compose,
-    InterpolationMode,
-    Resize,
-    ToTensor,
-)
-
 from src.utils.decorators import handle_exceptions
 from src.utils.logger import divider_logger, generic_logger
+from torchvision.transforms import Compose, InterpolationMode, Resize, ToTensor
 
 
 @handle_exceptions

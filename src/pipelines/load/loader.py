@@ -1,15 +1,19 @@
 # ==============================================================================
 # Title:       Dataset Loading
-# File:        /pipelines/load/loader.py
+# File:        /src/pipelines/load/loader.py
 # Author:      KATO Kengo
 # Description: Functions for importing datasets and creating validation splits
 # ==============================================================================
 
-import torch
+from pathlib import Path
 from torch.utils.data import random_split
-
 from src.utils.decorators import handle_exceptions
 from src.utils.logger import divider_logger, generic_logger
+
+import torch
+
+
+DATA_DIR = Path(__file__).resolve().parents[3] / "data"
 
 
 @handle_exceptions
@@ -23,13 +27,13 @@ def load_dataset(dataset_class):
         train_data, test_data: Datasets containing original images and labels.
     """
     train_data = dataset_class(
-        root="data",
+        root=str(DATA_DIR),
         train=True,
         download=True,
     )
 
     test_data = dataset_class(
-        root="data",
+        root=str(DATA_DIR),
         train=False,
         download=True,
     )

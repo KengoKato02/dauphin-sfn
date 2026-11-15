@@ -45,6 +45,3 @@ def gradient_descent_singleton(
     derived_loss = _compute_gradient(loss, theta_curr)
     theta_next = theta_curr - learning_rate * derived_loss
     return theta_next
-
-
-# ============================ PyTorch Examples ============================ #

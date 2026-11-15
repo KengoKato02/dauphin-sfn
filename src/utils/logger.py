@@ -5,8 +5,8 @@
 # Description: Logger functions to stringify Messages
 # ==============================================================================
 
-from src.utils.decorators import handle_exceptions
 from collections.abc import Mapping
+from src.utils.decorators import handle_exceptions
 
 
 @handle_exceptions

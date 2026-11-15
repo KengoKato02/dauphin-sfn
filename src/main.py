@@ -5,7 +5,7 @@
 # Description: Main file for orchestration of functions
 # ==============================================================================
 
-from descent_algorithms.batch_gd import gradient_descent_singleton
+from src.algorithms.batch_gd import gradient_descent_singleton
 
 import torch
 

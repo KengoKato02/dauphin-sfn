@@ -7,8 +7,8 @@
 
 from src.utils.decorators import handle_exceptions
 
-import matplotlib.pyplot as plt
 import torch
+import matplotlib.pyplot as plt
 
 
 @handle_exceptions

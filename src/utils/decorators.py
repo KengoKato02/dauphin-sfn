@@ -5,8 +5,8 @@
 # Description: Simple Decorators setup for any decorator functions
 # ==============================================================================
 
-import traceback
 import sys
+import traceback
 
 
 def log_arguments(fn):

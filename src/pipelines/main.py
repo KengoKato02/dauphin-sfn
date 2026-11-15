@@ -6,7 +6,6 @@
 # ==============================================================================
 
 from concurrent.futures import ThreadPoolExecutor
-
 from src.pipelines.cifar import run_cifar_pipeline
 from src.pipelines.mnist import run_mnist_pipeline
 

@@ -5,8 +5,8 @@
 # Description: Dedicated file for model imports relevant to Dauphin et al.
 # ==============================================================================
 
-from math import prod
 from torch import nn
+from math import prod
 
 
 def build_mlp(input_shape: tuple[int, int, int], hidden_units: int = 5) -> nn.Sequential:

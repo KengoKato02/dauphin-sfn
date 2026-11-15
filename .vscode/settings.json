@@ -1,0 +1,14 @@
+{
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8",
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
+        "editor.rulers": [100],
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "autopep8.importStrategy": "useBundled",
+    "autopep8.args": ["--max-line-length", "100"],
+    "isort.importStrategy": "useBundled"
+}

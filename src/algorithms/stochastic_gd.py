@@ -1,8 +1,7 @@
 """Single-example stochastic gradient descent (batch size one)."""
 
-from collections.abc import Iterable
-
 from torch import Tensor
+from collections.abc import Iterable
 from torch.optim import SGD as TorchSGD
 
 

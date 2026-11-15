@@ -5,11 +5,11 @@
 # Description: Functions for supplying training, validation and test batches
 # ==============================================================================
 
-import torch
-from torch.utils.data import DataLoader
-
-from src.utils.decorators import handle_exceptions
 from src.utils.logger import divider_logger, generic_logger
+from torch.utils.data import DataLoader
+from src.utils.decorators import handle_exceptions
+
+import torch
 
 
 @handle_exceptions

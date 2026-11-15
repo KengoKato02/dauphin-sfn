@@ -1,10 +1,8 @@
 """Stochastic gradient descent on the mean loss of a minibatch."""
 
-from collections.abc import Iterable
-
-# PyTorch Imports
-from torch.optim import SGD as TorchSGD
 from torch import Tensor
+from collections.abc import Iterable
+from torch.optim import SGD as TorchSGD
 
 
 class MiniBatchSGD(TorchSGD):
