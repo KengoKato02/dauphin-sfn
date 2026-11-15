@@ -5,7 +5,7 @@
 # Description: Implementation of Classical Batch Gradient Descent
 # ==============================================================================
 
-from utils.decorators import handle_exceptions
+from src.utils.decorators import handle_exceptions
 
 import torch
 
