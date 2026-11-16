@@ -9,12 +9,6 @@ from src.algorithms.batch_gd import gradient_descent_singleton
 
 import torch
 
-
-# Use x=2, y=5, w=1, b=0 and learning rate 0.1.
-# Calculate the prediction, loss, both derivatives, and one gradient-descent
-# update by hand. Then represent w and b as tensors requiring gradients
-# and check your calculation withPyTorch. Explain what changed after the update.
-
 x = torch.tensor(2.0)
 y = torch.tensor(5.0)
 
@@ -50,4 +44,4 @@ print("theta new:", theta_new)
 
 # Ensure to clear gradients
 w.grad = None
-b.grad = None 
+b.grad = None
