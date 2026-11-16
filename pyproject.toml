@@ -32,6 +32,11 @@ namespaces = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
+# Read torchvision's inline type annotations despite its missing py.typed marker.
+[[tool.mypy.overrides]]
+module = ["torchvision", "torchvision.*"]
+follow_untyped_imports = true
+
 [tool.isort]
 line_length = 100
 from_first = true

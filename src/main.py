@@ -2,10 +2,14 @@
 # Title:       Main Entry Point
 # File:        main.py
 # Author:      KATO Kengo
-# Description: Main file for orchestration of functions
+# Description: Personal playground for direct execution
 # ==============================================================================
 
+from torchvision.datasets import MNIST
 from src.algorithms.batch_gd import gradient_descent_singleton
+from src.utils.visuals.mnist import plot_mnist_resize_comparison
+from src.pipelines.load.loader import load_dataset
+from src.pipelines.transform.transformer import demonstrate_image_transform
 
 import torch
 
@@ -45,3 +49,12 @@ print("theta new:", theta_new)
 # Ensure to clear gradients
 w.grad = None
 b.grad = None
+
+######################
+# Image Demonstration
+######################
+train_data, test_data = load_dataset(MNIST)
+image, label = train_data[0]
+print("LABEL: ", label)
+original_tensor, resized_tensor = demonstrate_image_transform(image)
+plot_mnist_resize_comparison(original_tensor, resized_tensor)

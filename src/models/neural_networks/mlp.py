@@ -7,8 +7,10 @@
 
 from math import prod
 from torch import nn
+from src.utils.decorators import handle_exceptions
 
 
+@handle_exceptions
 def build_mlp(input_shape: tuple[int, int, int], hidden_units: int = 5) -> nn.Sequential:
     """Build a classifier with one tanh hidden layer and ten output scores.
 

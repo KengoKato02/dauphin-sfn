@@ -1,32 +1,61 @@
 # ==============================================================================
 # Title:       Dataset Image Transformation
-# File:        /pipelines/transform/transformer.py
+# File:        /src/pipelines/transform/transformer.py
 # Author:      KATO Kengo
 # Description: Functions for converting, resizing and preparing dataset images
 # ==============================================================================
 
-from src.utils.decorators import handle_exceptions
 from src.utils.logger import divider_logger, generic_logger
-from torchvision.transforms import Compose, InterpolationMode, Resize, ToTensor
+from src.utils.decorators import handle_exceptions
+from torchvision.transforms import Resize, Compose, ToTensor, InterpolationMode
+
+
+@handle_exceptions
+def _image_operations():
+    """Share the same resize and tensor conversion between the pipeline and demo."""
+    resize = Resize(
+        size=(10, 10),
+        interpolation=InterpolationMode.BILINEAR,
+        antialias=True,
+    )
+    return resize, ToTensor()
 
 
 @handle_exceptions
 def transform_dataset(train_data, test_data):
-    """Inspect image conversion and resizing, then apply them to both datasets.
+    """Attach automatic image preparation to the training and test datasets.
 
     Images are resized to 10 by 10 with bilinear interpolation and antialiasing.
     ToTensor converts pixels to floating-point values in [0, 1]. Grayscale
-    images retain one channel; colour images retain three channels.
+    images retain one channel; colour images retain three channels. B vs RGB
 
     Returns:
         train_data, test_data: The same datasets with their image transform set.
         Labels and downloaded files are unchanged.
     """
-    image, label = train_data[0]
+    image_transform = Compose(_image_operations())
+
+    # Preparation runs when an image is retrieved, not when this function runs.
+    train_data.transform = image_transform
+    test_data.transform = image_transform
+
+    return train_data, test_data
+
+
+@handle_exceptions
+def demonstrate_image_transform(image):
+    """Inspect tensor conversion and resizing for one original PIL image.
+
+    Call this separately from a demonstration utility. It prints the original
+    and resized tensor properties without changing any dataset.
+
+    Returns:
+        image_tensor, resized_tensor: Tensors suitable for comparison or plotting.
+    """
+    resize, to_tensor = _image_operations()
 
     # ========================== Tensor Conversion ========================== #
 
-    to_tensor = ToTensor()
     image_tensor = to_tensor(image)
 
     divider_logger()
@@ -40,13 +69,8 @@ def transform_dataset(train_data, test_data):
         "requires_grad": image_tensor.requires_grad,
     })
 
-    # ========================== Resizing ========================== #
-
-    resize = Resize(
-        size=(10, 10),
-        interpolation=InterpolationMode.BILINEAR,
-        antialias=True,
-    )
+    # ============================== Resizing ============================== #
+    # Both MNIST and CIFAR-10 are downsampled to 10 x 10 for this experiment.
 
     resized_image = resize(image)
     resized_tensor = to_tensor(resized_image)
@@ -60,27 +84,4 @@ def transform_dataset(train_data, test_data):
         "max": resized_tensor.max().item(),
     })
 
-    # ========================== Preparation Set ========================== #
-
-    image_transform = Compose([
-        resize,
-        to_tensor,
-    ])
-
-    # Apply the same preparation whenever either dataset retrieves an image.
-    train_data.transform = image_transform
-    test_data.transform = image_transform
-
-    prepared_image, label = train_data[0]
-
-    divider_logger()
-    print("PREPARATION SET")
-    generic_logger({
-        "shape": prepared_image.shape,
-        "dtype": prepared_image.dtype,
-        "min": prepared_image.min().item(),
-        "max": prepared_image.max().item(),
-        "label": label,
-    })
-
-    return train_data, test_data
+    return image_tensor, resized_tensor
