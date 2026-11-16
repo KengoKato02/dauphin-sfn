@@ -5,7 +5,7 @@
 # Description: Run MNIST and CIFAR-10 processing pipelines in parallel
 # ==============================================================================
 
-from utils.decorators import handle_exceptions
+from src.utils.decorators import handle_exceptions
 from concurrent.futures import ThreadPoolExecutor
 from src.pipelines.cifar import run_cifar_pipeline
 from src.pipelines.mnist import run_mnist_pipeline

@@ -55,6 +55,12 @@ your source changes without reinstalling the project.
 For runtime dependencies only, without the notebook tools, use
 `python -m pip install -e .` instead.
 
+All project modules are installed under the `src` package. For example, use
+`from src.utils.decorators import handle_exceptions`, not `from utils.decorators`.
+The editable install makes these imports available outside the repository folder too.
+After changing package configuration or moving packages, rerun the install command
+and restart the notebook kernel.
+
 ### 4. Register the notebook kernel
 
 Run this from the activated `.venv`:
@@ -80,6 +86,7 @@ In VS Code:
 6. Run the cells in order, or click **Run All**.
 
 The notebook kernel is selected separately from the terminal environment.
+Installing the project in one environment does not install it in a different kernel.
 To confirm the notebook uses `.venv`, run this in a cell:
 
 ```python

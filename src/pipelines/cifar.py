@@ -5,7 +5,7 @@
 # Description: Pipeline for importing, preparing and exporting CIFAR-10
 # ==============================================================================
 
-from utils.decorators import handle_exceptions
+from src.utils.decorators import handle_exceptions
 from torchvision.datasets import CIFAR10
 from src.pipelines.save.saver import save_dataset
 from src.pipelines.load.loader import load_dataset, split_dataset

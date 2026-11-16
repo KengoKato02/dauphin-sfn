@@ -5,7 +5,7 @@
 # Description: Pipeline for importing, preparing and exporting MNIST
 # ==============================================================================
 
-from utils.decorators import handle_exceptions
+from src.utils.decorators import handle_exceptions
 from torchvision.datasets import MNIST
 from src.pipelines.save.saver import save_dataset
 from src.pipelines.load.loader import load_dataset, split_dataset
