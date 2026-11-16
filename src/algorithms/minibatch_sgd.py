@@ -1,13 +1,15 @@
 """Stochastic gradient descent on the mean loss of a minibatch."""
 
 from torch import Tensor
-from collections.abc import Iterable
 from torch.optim import SGD as TorchSGD
+from collections.abc import Iterable
+from src.utils.decorators import handle_exceptions
 
 
 class MiniBatchSGD(TorchSGD):
     """The same update as SGD, with multiple examples per step supplied by main.py."""
 
+    @handle_exceptions
     def __init__(self, params: Iterable[Tensor], lr: float = 0.01, batch_size: int = 64) -> None:
         if batch_size < 2:
             raise ValueError(

@@ -1,8 +1,9 @@
 """Single-example stochastic gradient descent (batch size one)."""
 
 from torch import Tensor
-from collections.abc import Iterable
 from torch.optim import SGD as TorchSGD
+from collections.abc import Iterable
+from src.utils.decorators import handle_exceptions
 
 
 class SGD(TorchSGD):
@@ -10,5 +11,6 @@ class SGD(TorchSGD):
 
     batch_size = 1
 
+    @handle_exceptions
     def __init__(self, params: Iterable[Tensor], lr: float = 0.01) -> None:
         super().__init__(params, lr=lr)

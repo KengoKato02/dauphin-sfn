@@ -8,10 +8,12 @@
 from torch.func import functional_call
 from torch.nn.utils import parameters_to_vector, vector_to_parameters
 from torch.nn.functional import cross_entropy
+from src.utils.decorators import handle_exceptions
 
 import torch
 
 
+@handle_exceptions
 def parameter_loss(model, vector, images, labels):
     """Evaluate cross entropy at a parameter vector without changing the model."""
     parameters = {}
@@ -24,6 +26,7 @@ def parameter_loss(model, vector, images, labels):
     return cross_entropy(logits, labels)
 
 
+@handle_exceptions
 def loss_gradient_hessian(model, images, labels, max_parameters=2000):
     """Calculate exact derivatives of this batch's mean cross entropy.
 
@@ -37,6 +40,7 @@ def loss_gradient_hessian(model, images, labels, max_parameters=2000):
             "Use fewer hidden units, or disable curvature tracking for a wider MSGD run."
         )
 
+    @handle_exceptions
     def objective(parameters):
         return parameter_loss(model, parameters, images, labels)
 
@@ -54,6 +58,7 @@ class DampedNewton:
     optional rejected step are explicit choices for this small reference.
     """
 
+    @handle_exceptions
     def __init__(self, model, lr=1.0, max_parameters=2000):
         self.model = model
         self.lr = lr
@@ -63,6 +68,7 @@ class DampedNewton:
         if lr <= 0:
             raise ValueError("lr must be positive.")
 
+    @handle_exceptions
     def step(self, images, labels):
         """Apply one Newton step using derivatives and candidates on the same batch."""
         loss, gradient, hessian = loss_gradient_hessian(

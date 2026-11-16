@@ -1,6 +1,7 @@
 """Check that notebook imports work through the installed package."""
 
 from pathlib import Path
+from src.utils.decorators import handle_exceptions
 
 import os
 import ast
@@ -8,6 +9,7 @@ import sys
 import subprocess
 
 
+@handle_exceptions
 def test_notebook_imports_outside_repository(tmp_path):
     root = Path(__file__).resolve().parents[1]
     notebook = root / "notebooks" / "01_figure3_msgd_newton.ipynb"
@@ -43,6 +45,7 @@ assert namespace['run_cifar_pipeline'] is run_cifar_pipeline
     assert result.returncode == 0, result.stdout + result.stderr
 
 
+@handle_exceptions
 def test_project_imports_use_src_package():
     root = Path(__file__).resolve().parents[1]
     old_packages = {"utils", "pipelines", "algorithms", "models", "experiments", "viz",

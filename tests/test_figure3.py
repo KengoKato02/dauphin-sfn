@@ -4,8 +4,13 @@ from torch import nn
 from src.models import build_mlp
 from torch.optim import SGD
 from torch.utils.data import TensorDataset
-from src.experiments.figure3 import train_model, plot_results
+from src.training.trainer import train_model
+from src.utils.decorators import handle_exceptions
 from src.algorithms.damped_newton import DampedNewton, loss_gradient_hessian
+from src.utils.visuals.mlp_plots.training_error_by_epoch import plot_training_error_by_epoch
+from src.utils.visuals.mlp_plots.negative_curvature_by_epoch import plot_negative_curvature_by_epoch
+from src.utils.visuals.mlp_plots.training_error_by_hidden_units import \
+    plot_training_error_by_hidden_units
 
 import torch
 import pytest
@@ -13,6 +18,7 @@ import matplotlib.pyplot as plt
 
 
 @pytest.mark.parametrize("channels", [1, 3])
+@handle_exceptions
 def test_mlp_accepts_image_batches(channels):
     model = build_mlp((channels, 10, 10), hidden_units=5)
     assert model(torch.zeros(4, channels, 10, 10)).shape == (4, 10)
@@ -21,6 +27,7 @@ def test_mlp_accepts_image_batches(channels):
     )
 
 
+@handle_exceptions
 def test_exact_derivatives_match_binary_softmax():
     model = nn.Linear(1, 2, bias=False).double()
     with torch.no_grad():
@@ -39,6 +46,7 @@ def test_exact_derivatives_match_binary_softmax():
         loss_gradient_hessian(model, images, labels, max_parameters=1)
 
 
+@handle_exceptions
 def test_newton_matches_shifted_linear_solve_and_reduces_loss():
     model = nn.Linear(1, 2, bias=False).double()
     with torch.no_grad():
@@ -58,6 +66,7 @@ def test_newton_matches_shifted_linear_solve_and_reduces_loss():
     torch.testing.assert_close(model.weight.flatten(), expected)
 
 
+@handle_exceptions
 def test_newton_leaves_parameters_when_no_candidate_improves():
     model = nn.Linear(1, 2, bias=False).double()
     before = model.weight.detach().clone()
@@ -67,6 +76,7 @@ def test_newton_leaves_parameters_when_no_candidate_improves():
     torch.testing.assert_close(model.weight, before)
 
 
+@handle_exceptions
 def test_msgd_reduces_loss_and_repeats_with_same_seed():
     images = torch.cat((torch.zeros(4, 1, 10, 10), torch.ones(4, 1, 10, 10))).double()
     labels = torch.tensor([0] * 4 + [1] * 4)
@@ -85,6 +95,7 @@ def test_msgd_reduces_loss_and_repeats_with_same_seed():
     assert all(item["negative_magnitude"] >= 0 for item in histories[0])
 
 
+@handle_exceptions
 def test_rgb_newton_training_and_plot():
     torch.manual_seed(42)
     dataset = TensorDataset(torch.rand(4, 3, 10, 10).double(), torch.tensor([0, 1, 2, 3]))
@@ -93,10 +104,19 @@ def test_rgb_newton_training_and_plot():
         model, dataset, DampedNewton(model), epochs=1, batch_size=4, curvature_samples=2
     )
     assert len(history) == 2
-    figure = plot_results([
-        {"dataset": name, "method": "damped_newton", "hidden_units": 1, "history": history}
-        for name in ("mnist", "cifar10")
-    ])
-    assert len(figure.axes) == 6
-    assert figure.axes[2].get_yscale() == "log"
-    plt.close(figure)
+    plots = (
+        plot_training_error_by_hidden_units,
+        plot_training_error_by_epoch,
+        plot_negative_curvature_by_epoch,
+    )
+    for name in ("mnist", "cifar10"):
+        results = [
+            {"dataset": name, "method": "damped_newton", "hidden_units": 1, "history": history}
+        ]
+        for index, plot in enumerate(plots):
+            figure = plot(results)
+            assert len(figure.axes) == 1
+            assert figure.axes[0].get_title() == name.upper()
+            assert len(figure.axes[0].lines) == 1
+            assert figure.axes[0].get_yscale() == ("linear" if index == 0 else "log")
+            plt.close(figure)
