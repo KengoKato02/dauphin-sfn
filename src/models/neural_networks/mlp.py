@@ -29,6 +29,6 @@ def build_mlp(input_shape: tuple[int, int, int], hidden_units: int = 5) -> nn.Se
     return nn.Sequential(
         nn.Flatten(),
         nn.Linear(prod(input_shape), hidden_units),
-        nn.Tanh(),
-        nn.Linear(hidden_units, 10),
+        nn.Tanh(),  # Use Hyperbolic Tangent for activation function
+        nn.Linear(hidden_units, 10),  # Output: 10 for 0 - 9
     )

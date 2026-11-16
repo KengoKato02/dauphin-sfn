@@ -79,7 +79,7 @@ In VS Code:
 1. Open the repository folder.
 2. Install Microsoft's [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
    and [Jupyter](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter) extensions.
-3. Open [the experiment notebook](notebooks/01_figure3_msgd_newton.ipynb).
+3. Open [the experiment notebook](notebooks/msgd_damped.ipynb).
 4. Click **Select Kernel** in the notebook's upper-right corner.
 5. Select **Python (dauphin-sfn)**, or choose the Python environment inside this
    repository's `.venv` folder.

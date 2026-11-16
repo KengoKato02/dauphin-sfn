@@ -6,13 +6,10 @@
 # ==============================================================================
 
 from dataclasses import asdict
-from torch.optim import SGD
-from src.utils.loaders import load_training_data
-from src.training.config import ExperimentConfig
-from src.training.trainer import train_model
 from src.utils.decorators import handle_exceptions
-from src.algorithms.damped_newton import DampedNewton
 from src.models.neural_networks.mlp import build_mlp
+from src.training.msgd_training.trainer import train_msgd
+from src.training.damped_training.trainer import train_damped_newton
 
 import torch
 
@@ -37,28 +34,18 @@ def _create_model(config, dataset, run_id):
 
 
 @handle_exceptions
-def _create_optimizer(config, model):
-    """Create a fresh optimizer using this run's learning rate and momentum."""
-    if config.method == "msgd":
-        return SGD(model.parameters(), lr=config.learning_rate, momentum=config.momentum)
-    return DampedNewton(model, lr=config.learning_rate, max_parameters=config.max_parameters)
-
-
-@handle_exceptions
-def _run_experiment(config, dataset, run_id):
-    """Build and train one model, returning its settings and measurements."""
+def run_experiment(config, dataset, run_id):
+    """Build one model, select its trainer and return settings and measurements."""
     model, parameter_count = _create_model(config, dataset, run_id)
-    optimizer = _create_optimizer(config, model)
     batch_size = len(dataset) if config.batch_size is None else config.batch_size
 
     print(f"Run {run_id}: {config.dataset} | {config.method} | "
           f"h={config.hidden_units} | lr={config.learning_rate} | "
           f"momentum={config.momentum} | batch={batch_size}", flush=True)
-    history = train_model(
-        model, dataset, optimizer, epochs=config.epochs, batch_size=batch_size,
-        curvature_samples=config.curvature_samples, seed=config.seed,
-        max_parameters=config.max_parameters,
-    )
+    if config.method == "msgd":
+        history = train_msgd(model, dataset, config)
+    else:
+        history = train_damped_newton(model, dataset, config)
     return {
         "run_id": run_id,
         "name": config.name,
@@ -73,29 +60,3 @@ def _run_experiment(config, dataset, run_id):
         "device": "cpu",
         "history": history,
     }
-
-
-@handle_exceptions
-def run_experiments(configs, training_data=None):
-    """Validate configurations, reuse selected data and run each model separately.
-
-    Optionally supply a mapping of dataset names to TensorDatasets. Each run
-    gets a fresh model, optimizer and shuffled loader, as before.
-    """
-    configs = list(configs)
-    if not configs:
-        raise ValueError("Provide at least one experiment configuration.")
-    if any(not isinstance(config, ExperimentConfig) for config in configs):
-        raise TypeError("configs must contain ExperimentConfig objects.")
-
-    cached_data = {}
-    results = []
-    for run_id, config in enumerate(configs, start=1):
-        key = (config.dataset, config.train_limit)
-        if key not in cached_data:
-            cached_data[key] = load_training_data(config.dataset, config.train_limit, training_data)
-        dataset = cached_data[key]
-        if len(dataset) == 0:
-            raise ValueError("The selected training dataset is empty.")
-        results.append(_run_experiment(config, dataset, run_id))
-    return results
