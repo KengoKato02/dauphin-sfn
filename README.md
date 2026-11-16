@@ -88,30 +88,3 @@ In VS Code:
 The notebook kernel is selected separately from the terminal environment.
 Installing the project in one environment does not install it in a different kernel.
 To confirm the notebook uses `.venv`, run this in a cell:
-
-```python
-import sys
-print(sys.executable)
-```
-
-The printed path should point inside this repository's `.venv` directory.
-See the [VS Code notebook documentation](https://code.visualstudio.com/docs/datascience/jupyter-notebooks)
-for kernel selection.
-
-Alternatively, launch JupyterLab from the activated environment:
-
-```bash
-jupyter lab
-```
-
-Open the notebook under `notebooks/` and select **Python (dauphin-sfn)**.
-
-### First-run data preparation
-
-The notebook downloads and prepares a dataset if its processed training file
-is missing. The first CIFAR-10 run can therefore take longer than later runs.
-A small training limit does not reduce the initial download or preparation.
-
-Downloaded and processed data are stored under `data/` at the repository root.
-Notebook figures and experiment records are saved under `results/figure3_starter/`.
-These generated folders and `.venv/` are excluded from Git.
