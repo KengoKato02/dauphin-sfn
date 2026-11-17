@@ -29,7 +29,7 @@ def run_experiments(configs, training_data=None):
     for run_id, config in enumerate(configs, start=1):
         key = (config.dataset, config.train_limit)
         if key not in cached_data:
-            cached_data[key] = w(config.dataset, config.train_limit, training_data)
+            cached_data[key] = load_training_data(config.dataset, config.train_limit, training_data)
         dataset = cached_data[key]
         if len(dataset) == 0:
             raise ValueError("The selected training dataset is empty.")
